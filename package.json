@@ -1,0 +1,37 @@
+{
+  "name": "@rgba-image/pixel",
+  "version": "0.1.0",
+  "description": "Get or set individual pixels in an ImageData",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "tsc && mocha ./dist/test",
+    "coverage": "tsc && nyc --reporter=html --reporter=text mocha ./dist/test"
+  },
+  "nyc": {
+    "exclude": [
+      "./dist/test"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rgba-image/pixel.git"
+  },
+  "keywords": [],
+  "author": "Nik Coughlin <nrkn.com@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rgba-image/pixel/issues"
+  },
+  "homepage": "https://github.com/rgba-image/pixel#readme",
+  "dependencies": {
+    "@rgba-image/common": "^0.1.0"
+  },
+  "devDependencies": {
+    "@rgba-image/create-image": "^0.1.1",
+    "@rgba-image/png": "^0.1.0",
+    "@types/mocha": "^5.2.5",
+    "@types/node": "^10.12.1"
+  }
+}
