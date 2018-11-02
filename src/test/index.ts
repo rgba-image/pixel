@@ -19,6 +19,26 @@ const expectFillRegion = fromPng( expectFillRegionPng )
 const expectSetRegion = fromPng( expectSetRegionPng )
 const expectMapRegion = fromPng( expectMapRegionPng )
 
+const getNoise = () => {
+  const width = 1024
+  const height = 1024
+  const noise = createImage( width, height )
+
+  for ( let y = 0; y < height; y++ ) {
+    for ( let x = 0; x < width; x++ ) {
+      const index = ( y * width + x ) * 4
+      noise.data[ index ] = ( Math.random() * 256 ) | 0
+      noise.data[ index + 1 ] = ( Math.random() * 256 ) | 0
+      noise.data[ index + 2 ] = ( Math.random() * 256 ) | 0
+      noise.data[ index + 3 ] = ( Math.random() * 256 ) | 0
+    }
+  }
+
+  return noise
+}
+
+const noise = getNoise()
+
 describe( 'pixel', () => {
   it( 'getPixel', () => {
     const c = getPixel( pattern, 2, 3 )
@@ -295,4 +315,12 @@ describe( 'pixel', () => {
 
     assert.deepEqual( dest, empty )
   } )
+
+  // no test, just lazy benchmarking
+  it( 'big mapRegion', done => {
+    const dest = createImage( 768, 768 )
+
+    mapRegion( noise, dest, ( r, g, b, a ) => [ r, g, b, a ], 0, 0, 1280, 1280, 0, 0 )
+    done()
+  } ).timeout( 5000 )
 })
