@@ -1,13 +1,5 @@
-export declare type PixelData = [number, number, number, number, number, number];
-export declare type PixelUint32Data = [number, number, number];
-export declare type Rgba = [number, number, number, number];
-export declare type SetCallback = (sourceR: number, sourceG: number, sourceB: number, sourceA: number, regionX: number, regionY: number, sourceX: number, sourceY: number) => Rgba;
-export declare type MapCallback = (sourceR: number, sourceG: number, sourceB: number, sourceA: number, destR: number, destG: number, destB: number, destA: number, regionX: number, regionY: number, sourceX: number, sourceY: number, destX: number, destY: number) => Rgba;
-export declare const getPixel: (source: ImageData, x: number, y: number) => number[];
-export declare const setPixel: (dest: ImageData, x: number, y: number, r?: number, g?: number, b?: number, a?: number) => void;
-export declare const getPixelUint32: (source: ImageData, x: number, y: number) => number;
-export declare const setPixelUint32: (dest: ImageData, x: number, y: number, v: number) => void;
-export declare const plot: (dest: ImageData, pixels: [number, number, number, number, number, number][]) => void;
-export declare const plotUint32: (dest: ImageData, pixels: [number, number, number][]) => void;
-export declare const setRegion: (dest: ImageData, callback: SetCallback, sx?: number, sy?: number, sw?: number, sh?: number) => void;
-export declare const mapRegion: (source: ImageData, dest: ImageData, callback: MapCallback, sx?: number, sy?: number, sw?: number, sh?: number, dx?: number, dy?: number) => void;
+export { COMPOSITE_NORMAL, COMPOSITE_MULTIPLY, COMPOSITE_SCREEN, COMPOSITE_OVERLAY, COMPOSITE_DARKEN, COMPOSITE_LIGHTEN, COMPOSITE_HARD_LIGHT, COMPOSITE_DIFFERENCE, COMPOSITE_EXCLUSION, compositePixel, compositePixelUint32, compositeNormal, compositeMultiply, compositeScreen, compositeOverlay, compositeDarken, compositeLighten, compositeHardLight, compositeDifference, compositeExclusion, compositeNormalUint32, compositeMultiplyUint32, compositeScreenUint32, compositeOverlayUint32, compositeDarkenUint32, compositeLightenUint32, compositeHardLightUint32, compositeDifferenceUint32, compositeExclusionUint32 } from './composite';
+export { getPixel, getPixelUint32, setPixel, setPixelUint32 } from './pixel';
+export { plot, plotUint32 } from './plot';
+export { setRegion, mapRegion, setRegionUint32, mapRegionUint32 } from './region';
+export { PixelData, PixelUint32Data, Rgba, SetCallback, MapCallback, SetUint32Callback, MapUint32Callback, CompositeMode, CompositePixel, CompositePixelUint32 } from './types';
