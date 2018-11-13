@@ -1,9 +1,9 @@
 import { rgbaToUint32, isLittleEndian } from '@rgba-image/common'
-import { PixelData, PixelUint32Data, CompositeMode } from './types'
+import { PlotData, PlotUint32Data, CompositeMode } from './types'
 import { clampUint32 } from './util'
 import { COMPOSITE_NONE, compositePixelUint32 } from './composite';
 
-export const plot = ( dest: ImageData, pixels: PixelData[], compositeMode: CompositeMode = COMPOSITE_NONE ) => {
+export const plot = ( dest: ImageData, pixels: PlotData[], compositeMode: CompositeMode = COMPOSITE_NONE ) => {
   const { length } = pixels
 
   if ( !length ) return
@@ -35,7 +35,7 @@ export const plot = ( dest: ImageData, pixels: PixelData[], compositeMode: Compo
   }
 }
 
-export const plotUint32 = ( dest: ImageData, pixels: PixelUint32Data[], compositeMode: CompositeMode = COMPOSITE_NONE ) => {
+export const plotUint32 = ( dest: ImageData, pixels: PlotUint32Data[], compositeMode: CompositeMode = COMPOSITE_NONE ) => {
   const { length } = pixels
 
   if ( !length ) return

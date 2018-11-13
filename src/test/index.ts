@@ -3,17 +3,12 @@ import * as fs from 'fs'
 import { fromPng } from '@rgba-image/png'
 import { createImage } from '@rgba-image/create-image'
 import {
-  getPixel, setPixel, getPixelUint32, setPixelUint32, PixelData, plot,
-  PixelUint32Data, plotUint32, setRegion, mapRegion, CompositeMode
+  getPixel, setPixel, getPixelUint32, setPixelUint32, PlotData, plot,
+  PlotUint32Data, plotUint32, setRegion, mapRegion, CompositeMode
 } from '..'
-import { compositePixel, COMPOSITE_NORMAL, compositePixelUint32 } from '../composite'
+
 import { mapRegionUint32, setRegionUint32 } from '../region'
 import { rgbaToUint32, isLittleEndian } from '@rgba-image/common'
-
-const compositeNames: string[] = [
-  'normal', 'multiply', 'screen', 'overlay', 'darken', 'lighten',
-  'hard-light', 'difference', 'exclusion'
-]
 
 const patternPng = fs.readFileSync( './src/test/fixtures/pattern.png' )
 const overlayPng = fs.readFileSync( './src/test/fixtures/overlay.png' )
@@ -21,9 +16,6 @@ const expectPlotPng = fs.readFileSync( './src/test/fixtures/plot.png' )
 const expectFillRegionPng = fs.readFileSync( './src/test/fixtures/fill-region.png' )
 const expectSetRegionPng = fs.readFileSync( './src/test/fixtures/set-region.png' )
 const expectMapRegionPng = fs.readFileSync( './src/test/fixtures/map-region.png' )
-const expectCompositePngs = compositeNames.map( name =>
-  fs.readFileSync( `./src/test/fixtures/composite-${ name }.png`)
-)
 
 const pattern = fromPng( patternPng )
 const overlay = fromPng( overlayPng )
@@ -31,7 +23,6 @@ const expectPlot = fromPng( expectPlotPng )
 const expectFillRegion = fromPng( expectFillRegionPng )
 const expectSetRegion = fromPng( expectSetRegionPng )
 const expectMapRegion = fromPng( expectMapRegionPng )
-const expectComposites = expectCompositePngs.map( png => fromPng( png ) )
 
 const getNoise = () => {
   const width = 1024
@@ -170,7 +161,7 @@ describe( 'pixel', () => {
   it( 'plot', () => {
     const dest = createImage( 3, 3 )
 
-    const pixels: PixelData[] = [
+    const pixels: PlotData[] = [
       [ 0, 0, 51, 153, 255, 128 ],
       [ 1, 1, 51, 153, 255, 128 ],
       [ 2, 2, 51, 153, 255, 128 ]
@@ -184,7 +175,7 @@ describe( 'pixel', () => {
   it( 'plot with a mode', () => {
     const dest = createImage( 3, 3 )
 
-    const pixels: PixelData[] = [
+    const pixels: PlotData[] = [
       [ 0, 0, 51, 153, 255, 128 ],
       [ 1, 1, 51, 153, 255, 128 ],
       [ 2, 2, 51, 153, 255, 128 ]
@@ -207,7 +198,7 @@ describe( 'pixel', () => {
   it( 'does not plot out of bounds', () => {
     const dest = createImage( 3, 3 )
 
-    const pixels: PixelData[] = [
+    const pixels: PlotData[] = [
       [ 0, 0, 51, 153, 255, 128 ],
       [ 1, 1, 51, 153, 255, 128 ],
       [ 2, 2, 51, 153, 255, 128 ],
@@ -222,7 +213,7 @@ describe( 'pixel', () => {
   it( 'plotUint32', () => {
     const dest = createImage( 3, 3 )
 
-    const pixels: PixelUint32Data[] = [
+    const pixels: PlotUint32Data[] = [
       [ 0, 0, 2164234547 ],
       [ 1, 1, 2164234547 ],
       [ 2, 2, 2164234547 ]
@@ -236,7 +227,7 @@ describe( 'pixel', () => {
   it( 'plotUint32 with a mode', () => {
     const dest = createImage( 3, 3 )
 
-    const pixels: PixelUint32Data[] = [
+    const pixels: PlotUint32Data[] = [
       [ 0, 0, 2164234547 ],
       [ 1, 1, 2164234547 ],
       [ 2, 2, 2164234547 ]
@@ -260,7 +251,7 @@ describe( 'pixel', () => {
   it( 'does not plot out of bounds', () => {
     const dest = createImage( 3, 3 )
 
-    const pixels: PixelUint32Data[] = [
+    const pixels: PlotUint32Data[] = [
       [ 0, 0, 2164234547 ],
       [ 1, 1, 2164234547 ],
       [ 2, 2, 2164234547 ],
@@ -494,39 +485,4 @@ describe( 'pixel', () => {
     mapRegion( noise, dest, ( r, g, b, a ) => [ r, g, b, a ], 0, 0, 1280, 1280, 0, 0 )
     done()
   } ).timeout( 5000 )
-
-  describe( 'compositePixel', () => {
-    compositeNames.forEach( ( name, i ) => {
-      it( `composite mode ${ name }`, () => {
-        const dest = fromPng( patternPng )
-
-        mapRegion(
-          overlay, dest,
-          ( sR, sG, sB, sA, dR, dG, dB, dA ) => {
-            return compositePixel( sR, sG, sB, sA, dR, dG, dB, dA, <CompositeMode>i )
-          }
-        )
-
-        assert.deepEqual( dest, expectComposites[ i ] )
-      } )
-
-      it( `composite mode uint32 ${ name }`, () => {
-        const dest = fromPng( patternPng )
-
-        mapRegionUint32(
-          overlay, dest,
-          ( sR, sG, sB, sA, dR, dG, dB, dA ) => {
-            return compositePixelUint32( sR, sG, sB, sA, dR, dG, dB, dA, <CompositeMode>i )
-          }
-        )
-
-        assert.deepEqual( dest, expectComposites[ i ] )
-      } )
-    })
-
-    it( 'bad arguments', () => {
-      assert.throws( () => compositePixel( 0, 0, 0, 0, 0, 0, 0, 0, -1 ) )
-      assert.throws( () => compositePixelUint32( 0, 0, 0, 0, 0, 0, 0, 0, -1 ) )
-    })
-  })
 })

@@ -1,8 +1,4 @@
-export type PixelData = [ number, number, number, number, number, number ]
 
-export type PixelUint32Data = [ number, number, number ]
-
-export type Rgba = [ number, number, number, number ]
 
 export type SetCallback = (
   sourceR: number, sourceG: number, sourceB: number, sourceA: number,
@@ -31,6 +27,12 @@ export type MapUint32Callback = (
   sourceX: number, sourceY: number,
   destX: number, destY: number
 ) => number
+
+export type PlotData = [ number, number, number, number, number, number ]
+
+export type PlotUint32Data = [ number, number, number ]
+
+export type Rgba = [ number, number, number, number ]
 
 export type CompositeMode = -1 | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
 
