@@ -61,6 +61,16 @@ const COMPOSITE_EXCLUSION = 8
 setPixel( image, x, y, r, g, b, a, COMPOSITE_NORMAL )
 ```
 
+Instead of a numbered mode, you can also pass a composite function. Note that
+for speed, the composite function should return a `uint32` color:
+
+```ts
+type CompositeRgbaUint32 = (
+  sR: number, sG: number, sB: number, sA: number,
+  dR: number, dG: number, dB: number, dA: number
+) => number
+```
+
 ### getPixelUint32
 
 Get the pixel as a Uint32:
@@ -100,6 +110,9 @@ above for the numerical values of the modes:
 setPixelUint32( image, x, y, v, COMPOSITE_NORMAL )
 ```
 
+Instead of a numbered mode, you can also pass a composite function. See
+`setPixel` above
+
 ### plot
 
 Plot an array of pixels where each pixel is an array with six members,
@@ -127,6 +140,9 @@ above for the numerical values of the modes:
 plot( image, pixels, COMPOSITE_NORMAL )
 ```
 
+Instead of a numbered mode, you can also pass a composite function. See
+`setPixel` above
+
 ### plotUint32
 
 Plot an array of pixels where each pixel is an array with 3 members,
@@ -153,6 +169,9 @@ above for the numerical values of the modes:
 ```js
 plotUint32( image, pixels, COMPOSITE_NORMAL )
 ```
+
+Instead of a numbered mode, you can also pass a composite function. See
+`setPixel` above
 
 ### setRegion
 

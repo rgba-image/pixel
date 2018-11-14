@@ -77,6 +77,16 @@ describe( 'pixel', () => {
     assert.deepEqual( c, [ 255, 0, 0, 128 ] )
   } )
 
+  it( 'setPixel with CompositeRgbaUint32', () => {
+    const dest = createImage( 8, 8 )
+
+    setPixel( dest, 2, 3, 255, 0, 0, 128, ( r, g, b, a ) => rgbaToUint32( r, g, b, a, isLittleEndian ) )
+
+    const c = getPixel( dest, 2, 3 )
+
+    assert.deepEqual( c, [ 255, 0, 0, 128 ] )
+  } )
+
   it( 'setPixel default params', () => {
     const dest = createImage( 8, 8 )
 
@@ -127,6 +137,16 @@ describe( 'pixel', () => {
     assert.deepEqual( c, [ 51, 153, 255, 128 ] )
   } )
 
+  it( 'setPixelUint32 with CompositeRgbaUint32', () => {
+    const dest = createImage( 8, 8 )
+
+    setPixelUint32( dest, 5, 4, 2164234547, ( r, g, b, a ) => rgbaToUint32( r, g, b, a, isLittleEndian ) )
+
+    const c = getPixel( dest, 5, 4 )
+
+    assert.deepEqual( c, [ 51, 153, 255, 128 ] )
+  } )
+
   it( 'setPixelUint32 out of bounds', () => {
     const dest = createImage( 8, 8, pattern.data )
 
@@ -134,7 +154,6 @@ describe( 'pixel', () => {
 
     assert.deepEqual( dest, pattern )
   } )
-
 
   it( 'setPixelUint32 clamps lower value', () => {
     const dest = createImage( 8, 8 )
@@ -182,6 +201,20 @@ describe( 'pixel', () => {
     ]
 
     plot( dest, pixels, COMPOSITE_NORMAL )
+
+    assert.deepEqual( dest, expectPlot )
+  } )
+
+  it( 'plot with CompositeRgbaUint32', () => {
+    const dest = createImage( 3, 3 )
+
+    const pixels: PlotData[] = [
+      [ 0, 0, 51, 153, 255, 128 ],
+      [ 1, 1, 51, 153, 255, 128 ],
+      [ 2, 2, 51, 153, 255, 128 ]
+    ]
+
+    plot( dest, pixels, ( r, g, b, a ) => rgbaToUint32( r, g, b, a, isLittleEndian ) )
 
     assert.deepEqual( dest, expectPlot )
   } )
@@ -238,6 +271,19 @@ describe( 'pixel', () => {
     assert.deepEqual( dest, expectPlot )
   } )
 
+  it( 'plotUint32 with CompositeRgbaUint32', () => {
+    const dest = createImage( 3, 3 )
+
+    const pixels: PlotUint32Data[] = [
+      [ 0, 0, 2164234547 ],
+      [ 1, 1, 2164234547 ],
+      [ 2, 2, 2164234547 ]
+    ]
+
+    plotUint32( dest, pixels, ( r, g, b, a ) => rgbaToUint32( r, g, b, a, isLittleEndian ) )
+
+    assert.deepEqual( dest, expectPlot )
+  } )
 
   it( 'early return on plot with no pixels', () => {
     const dest = createImage( 3, 3 )

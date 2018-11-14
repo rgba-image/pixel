@@ -1,8 +1,8 @@
-import { rgbaToUint32, isLittleEndian, CompositeMode, clampUint32 } from '@rgba-image/common'
+import { rgbaToUint32, isLittleEndian, CompositeMode, clampUint32, CompositeRgbaUint32 } from '@rgba-image/common'
 import { PlotData, PlotUint32Data } from './types'
 import { compositeRgbaUint32 } from '@rgba-image/color'
 
-export const plot = ( dest: ImageData, pixels: PlotData[], compositeMode: CompositeMode = -1 ) => {
+export const plot = ( dest: ImageData, pixels: PlotData[], composite: CompositeMode | CompositeRgbaUint32 = -1 ) => {
   const { length } = pixels
 
   if ( !length ) return
@@ -20,7 +20,7 @@ export const plot = ( dest: ImageData, pixels: PlotData[], compositeMode: Compos
 
     if ( index < 0 || index >= size ) continue
 
-    if( compositeMode === -1 ){
+    if( composite === -1 ){
       data[ index ] = rgbaToUint32( r, g, b, a, isLittleEndian )
     } else {
       const currentIndex = index * 4
@@ -29,12 +29,14 @@ export const plot = ( dest: ImageData, pixels: PlotData[], compositeMode: Compos
       const dB = dest.data[ currentIndex + 2 ]
       const dA = dest.data[ currentIndex + 3 ]
 
-      data[ index ] = compositeRgbaUint32( r, g, b, a, dR, dG, dB, dA, compositeMode )
+      data[ index ] = typeof composite === 'function' ?
+        ( <CompositeRgbaUint32>composite )( r, g, b, a, dR, dG, dB, dA ) :
+        compositeRgbaUint32( r, g, b, a, dR, dG, dB, dA, composite )
     }
   }
 }
 
-export const plotUint32 = ( dest: ImageData, pixels: PlotUint32Data[], compositeMode: CompositeMode = -1 ) => {
+export const plotUint32 = ( dest: ImageData, pixels: PlotUint32Data[], composite: CompositeMode | CompositeRgbaUint32 = -1 ) => {
   const { length } = pixels
 
   if ( !length ) return
@@ -54,7 +56,7 @@ export const plotUint32 = ( dest: ImageData, pixels: PlotUint32Data[], composite
 
     if ( index < 0 || index >= size ) continue
 
-    if ( compositeMode === -1 ) {
+    if ( composite === -1 ) {
       v = clampUint32( v )
 
       data[ index ] = v
@@ -72,7 +74,9 @@ export const plotUint32 = ( dest: ImageData, pixels: PlotUint32Data[], composite
       const b = rgbaUint8Clamped[ 2 ]
       const a = rgbaUint8Clamped[ 3 ]
 
-      data[ index ] = compositeRgbaUint32( r, g, b, a, dR, dG, dB, dA, compositeMode )
+      data[ index ] = typeof composite === 'function' ?
+        ( <CompositeRgbaUint32>composite )( r, g, b, a, dR, dG, dB, dA ) :
+        compositeRgbaUint32( r, g, b, a, dR, dG, dB, dA, composite )
     }
   }
 }

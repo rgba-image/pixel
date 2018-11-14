@@ -14,7 +14,7 @@ exports.getPixel = (source, x, y) => {
     const a = source.data[index + 3];
     return [r, g, b, a];
 };
-exports.setPixel = (dest, x, y, r = 0, g = 0, b = 0, a = 255, compositeMode = -1) => {
+exports.setPixel = (dest, x, y, r = 0, g = 0, b = 0, a = 255, composite = -1) => {
     x = x | 0;
     y = y | 0;
     const dataIndex = y * dest.width + x;
@@ -22,7 +22,7 @@ exports.setPixel = (dest, x, y, r = 0, g = 0, b = 0, a = 255, compositeMode = -1
     if (index < 0 || index >= dest.data.length)
         return;
     const data = new Uint32Array(dest.data.buffer);
-    if (compositeMode === -1) {
+    if (composite === -1) {
         data[dataIndex] = common_1.rgbaToUint32(r, g, b, a, common_1.isLittleEndian);
     }
     else {
@@ -30,7 +30,9 @@ exports.setPixel = (dest, x, y, r = 0, g = 0, b = 0, a = 255, compositeMode = -1
         const dG = dest.data[index + 1];
         const dB = dest.data[index + 2];
         const dA = dest.data[index + 3];
-        data[dataIndex] = color_1.compositeRgbaUint32(r, g, b, a, dR, dG, dB, dA, compositeMode);
+        data[dataIndex] = typeof composite === 'function' ?
+            composite(r, g, b, a, dR, dG, dB, dA) :
+            color_1.compositeRgbaUint32(r, g, b, a, dR, dG, dB, dA, composite);
     }
 };
 exports.getPixelUint32 = (source, x, y) => {
@@ -43,7 +45,7 @@ exports.getPixelUint32 = (source, x, y) => {
     const data = new Uint32Array(source.data.buffer);
     return data[index];
 };
-exports.setPixelUint32 = (dest, x, y, v, compositeMode = -1) => {
+exports.setPixelUint32 = (dest, x, y, v, composite = -1) => {
     x = x | 0;
     y = y | 0;
     const size = dest.width * dest.height;
@@ -54,7 +56,7 @@ exports.setPixelUint32 = (dest, x, y, v, compositeMode = -1) => {
     const data = new Uint32Array(dest.data.buffer);
     const rgbaUint32 = new Uint32Array(1);
     const rgbaUint8Clamped = new Uint8ClampedArray(rgbaUint32.buffer);
-    if (compositeMode === -1) {
+    if (composite === -1) {
         data[index] = v;
     }
     else {
@@ -68,7 +70,9 @@ exports.setPixelUint32 = (dest, x, y, v, compositeMode = -1) => {
         const g = rgbaUint8Clamped[1];
         const b = rgbaUint8Clamped[2];
         const a = rgbaUint8Clamped[3];
-        data[index] = color_1.compositeRgbaUint32(r, g, b, a, dR, dG, dB, dA, compositeMode);
+        data[index] = typeof composite === 'function' ?
+            composite(r, g, b, a, dR, dG, dB, dA) :
+            color_1.compositeRgbaUint32(r, g, b, a, dR, dG, dB, dA, composite);
     }
 };
 //# sourceMappingURL=pixel.js.map

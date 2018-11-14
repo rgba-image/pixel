@@ -56,6 +56,12 @@ describe('pixel', () => {
         const c = __1.getPixel(dest, 2, 3);
         assert.deepEqual(c, [255, 0, 0, 128]);
     });
+    it('setPixel with CompositeRgbaUint32', () => {
+        const dest = create_image_1.createImage(8, 8);
+        __1.setPixel(dest, 2, 3, 255, 0, 0, 128, (r, g, b, a) => common_1.rgbaToUint32(r, g, b, a, common_1.isLittleEndian));
+        const c = __1.getPixel(dest, 2, 3);
+        assert.deepEqual(c, [255, 0, 0, 128]);
+    });
     it('setPixel default params', () => {
         const dest = create_image_1.createImage(8, 8);
         __1.setPixel(dest, 2, 3);
@@ -84,6 +90,12 @@ describe('pixel', () => {
     it('setPixelUint32 with a mode', () => {
         const dest = create_image_1.createImage(8, 8);
         __1.setPixelUint32(dest, 5, 4, 2164234547, common_1.COMPOSITE_NORMAL);
+        const c = __1.getPixel(dest, 5, 4);
+        assert.deepEqual(c, [51, 153, 255, 128]);
+    });
+    it('setPixelUint32 with CompositeRgbaUint32', () => {
+        const dest = create_image_1.createImage(8, 8);
+        __1.setPixelUint32(dest, 5, 4, 2164234547, (r, g, b, a) => common_1.rgbaToUint32(r, g, b, a, common_1.isLittleEndian));
         const c = __1.getPixel(dest, 5, 4);
         assert.deepEqual(c, [51, 153, 255, 128]);
     });
@@ -126,6 +138,16 @@ describe('pixel', () => {
         __1.plot(dest, pixels, common_1.COMPOSITE_NORMAL);
         assert.deepEqual(dest, expectPlot);
     });
+    it('plot with CompositeRgbaUint32', () => {
+        const dest = create_image_1.createImage(3, 3);
+        const pixels = [
+            [0, 0, 51, 153, 255, 128],
+            [1, 1, 51, 153, 255, 128],
+            [2, 2, 51, 153, 255, 128]
+        ];
+        __1.plot(dest, pixels, (r, g, b, a) => common_1.rgbaToUint32(r, g, b, a, common_1.isLittleEndian));
+        assert.deepEqual(dest, expectPlot);
+    });
     it('early return on plot with no pixels', () => {
         const dest = create_image_1.createImage(3, 3);
         const empty = create_image_1.createImage(3, 3);
@@ -161,6 +183,16 @@ describe('pixel', () => {
             [2, 2, 2164234547]
         ];
         __1.plotUint32(dest, pixels, common_1.COMPOSITE_NORMAL);
+        assert.deepEqual(dest, expectPlot);
+    });
+    it('plotUint32 with CompositeRgbaUint32', () => {
+        const dest = create_image_1.createImage(3, 3);
+        const pixels = [
+            [0, 0, 2164234547],
+            [1, 1, 2164234547],
+            [2, 2, 2164234547]
+        ];
+        __1.plotUint32(dest, pixels, (r, g, b, a) => common_1.rgbaToUint32(r, g, b, a, common_1.isLittleEndian));
         assert.deepEqual(dest, expectPlot);
     });
     it('early return on plot with no pixels', () => {
