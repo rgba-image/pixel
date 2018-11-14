@@ -1,9 +1,8 @@
-import { rgbaToUint32, isLittleEndian } from '@rgba-image/common'
-import { PlotData, PlotUint32Data, CompositeMode } from './types'
-import { clampUint32 } from './util'
-import { COMPOSITE_NONE, compositePixelUint32 } from './composite';
+import { rgbaToUint32, isLittleEndian, CompositeMode, clampUint32 } from '@rgba-image/common'
+import { PlotData, PlotUint32Data } from './types'
+import { compositeRgbaUint32 } from '@rgba-image/color'
 
-export const plot = ( dest: ImageData, pixels: PlotData[], compositeMode: CompositeMode = COMPOSITE_NONE ) => {
+export const plot = ( dest: ImageData, pixels: PlotData[], compositeMode: CompositeMode = -1 ) => {
   const { length } = pixels
 
   if ( !length ) return
@@ -21,7 +20,7 @@ export const plot = ( dest: ImageData, pixels: PlotData[], compositeMode: Compos
 
     if ( index < 0 || index >= size ) continue
 
-    if( compositeMode === COMPOSITE_NONE ){
+    if( compositeMode === -1 ){
       data[ index ] = rgbaToUint32( r, g, b, a, isLittleEndian )
     } else {
       const currentIndex = index * 4
@@ -30,12 +29,12 @@ export const plot = ( dest: ImageData, pixels: PlotData[], compositeMode: Compos
       const dB = dest.data[ currentIndex + 2 ]
       const dA = dest.data[ currentIndex + 3 ]
 
-      data[ index ] = compositePixelUint32( r, g, b, a, dR, dG, dB, dA, compositeMode )
+      data[ index ] = compositeRgbaUint32( r, g, b, a, dR, dG, dB, dA, compositeMode )
     }
   }
 }
 
-export const plotUint32 = ( dest: ImageData, pixels: PlotUint32Data[], compositeMode: CompositeMode = COMPOSITE_NONE ) => {
+export const plotUint32 = ( dest: ImageData, pixels: PlotUint32Data[], compositeMode: CompositeMode = -1 ) => {
   const { length } = pixels
 
   if ( !length ) return
@@ -55,7 +54,7 @@ export const plotUint32 = ( dest: ImageData, pixels: PlotUint32Data[], composite
 
     if ( index < 0 || index >= size ) continue
 
-    if ( compositeMode === COMPOSITE_NONE ) {
+    if ( compositeMode === -1 ) {
       v = clampUint32( v )
 
       data[ index ] = v
@@ -73,7 +72,7 @@ export const plotUint32 = ( dest: ImageData, pixels: PlotUint32Data[], composite
       const b = rgbaUint8Clamped[ 2 ]
       const a = rgbaUint8Clamped[ 3 ]
 
-      data[ index ] = compositePixelUint32( r, g, b, a, dR, dG, dB, dA, compositeMode )
+      data[ index ] = compositeRgbaUint32( r, g, b, a, dR, dG, dB, dA, compositeMode )
     }
   }
 }

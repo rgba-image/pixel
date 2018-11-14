@@ -1,7 +1,5 @@
-import { rgbaToUint32, isLittleEndian } from '@rgba-image/common'
-import { clampUint32 } from './util'
-import { CompositeMode } from './types';
-import { COMPOSITE_NONE, compositePixelUint32 } from './composite'
+import { rgbaToUint32, isLittleEndian, CompositeMode, clampUint32 } from '@rgba-image/common'
+import { compositeRgbaUint32 } from '@rgba-image/color'
 
 export const getPixel = ( source: ImageData, x: number, y: number ) => {
   x = x | 0
@@ -19,7 +17,7 @@ export const getPixel = ( source: ImageData, x: number, y: number ) => {
   return [ r, g, b, a ]
 }
 
-export const setPixel = ( dest: ImageData, x: number, y: number, r = 0, g = 0, b = 0, a = 255, compositeMode: CompositeMode = COMPOSITE_NONE ) => {
+export const setPixel = ( dest: ImageData, x: number, y: number, r = 0, g = 0, b = 0, a = 255, compositeMode: CompositeMode = -1 ) => {
   x = x | 0
   y = y | 0
 
@@ -30,7 +28,7 @@ export const setPixel = ( dest: ImageData, x: number, y: number, r = 0, g = 0, b
 
   const data = new Uint32Array( dest.data.buffer )
 
-  if( compositeMode === COMPOSITE_NONE ){
+  if( compositeMode === -1 ){
     data[ dataIndex ] = rgbaToUint32( r, g, b, a, isLittleEndian )
   } else {
     const dR = dest.data[ index ]
@@ -38,7 +36,7 @@ export const setPixel = ( dest: ImageData, x: number, y: number, r = 0, g = 0, b
     const dB = dest.data[ index + 2 ]
     const dA = dest.data[ index + 3 ]
 
-    data[ dataIndex ] = compositePixelUint32( r, g, b, a, dR, dG, dB, dA, compositeMode )
+    data[ dataIndex ] = compositeRgbaUint32( r, g, b, a, dR, dG, dB, dA, compositeMode )
   }
 }
 
@@ -56,7 +54,7 @@ export const getPixelUint32 = ( source: ImageData, x: number, y: number ) => {
   return data[ index ]
 }
 
-export const setPixelUint32 = ( dest: ImageData, x: number, y: number, v: number, compositeMode: CompositeMode = COMPOSITE_NONE ) => {
+export const setPixelUint32 = ( dest: ImageData, x: number, y: number, v: number, compositeMode: CompositeMode = -1 ) => {
   x = x | 0
   y = y | 0
 
@@ -71,7 +69,7 @@ export const setPixelUint32 = ( dest: ImageData, x: number, y: number, v: number
   const rgbaUint32 = new Uint32Array( 1 )
   const rgbaUint8Clamped = new Uint8ClampedArray( rgbaUint32.buffer )
 
-  if ( compositeMode === COMPOSITE_NONE ) {
+  if ( compositeMode === -1 ) {
     data[ index ] = v
   } else {
     const currentIndex = index * 4
@@ -87,6 +85,6 @@ export const setPixelUint32 = ( dest: ImageData, x: number, y: number, v: number
     const b = rgbaUint8Clamped[ 2 ]
     const a = rgbaUint8Clamped[ 3 ]
 
-    data[ index ] = compositePixelUint32( r, g, b, a, dR, dG, dB, dA, compositeMode )
+    data[ index ] = compositeRgbaUint32( r, g, b, a, dR, dG, dB, dA, compositeMode )
   }
 }

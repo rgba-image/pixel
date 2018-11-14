@@ -43,8 +43,19 @@ const a = 127
 setPixel( image, x, y, r, g, b, a )
 ```
 
-You can also composite the pixel over an existing color, see `compositePixel`
-below for the numerical values of the modes:
+You can also composite the pixel over an existing color, the composite modes are:
+
+```js
+const COMPOSITE_NORMAL = 0
+const COMPOSITE_MULTIPLY = 1
+const COMPOSITE_SCREEN = 2
+const COMPOSITE_OVERLAY = 3
+const COMPOSITE_DARKEN = 4
+const COMPOSITE_LIGHTEN = 5
+const COMPOSITE_HARD_LIGHT = 6
+const COMPOSITE_DIFFERENCE = 7
+const COMPOSITE_EXCLUSION = 8
+```
 
 ```js
 setPixel( image, x, y, r, g, b, a, COMPOSITE_NORMAL )
@@ -82,8 +93,8 @@ const v = 2164234547
 setPixelUint32( image, x, y, v )
 ```
 
-You can also composite the pixel over an existing color, see `compositePixel`
-below for the numerical values of the modes:
+You can also composite the pixel over an existing color, see `setPixel`
+above for the numerical values of the modes:
 
 ```js
 setPixelUint32( image, x, y, v, COMPOSITE_NORMAL )
@@ -109,8 +120,8 @@ const pixels = [
 plot( image, pixels )
 ```
 
-You can also plot the pixels over existing colors, see `compositePixel`
-below for the numerical values of the modes:
+You can also plot the pixels over existing colors, see `setPixel`
+above for the numerical values of the modes:
 
 ```js
 plot( image, pixels, COMPOSITE_NORMAL )
@@ -136,8 +147,8 @@ const pixels = [
 plotUint32( image, pixels )
 ```
 
-You can also plot the pixels over existing colors, see `compositePixel`
-below for the numerical values of the modes:
+You can also plot the pixels over existing colors, see `setPixel`
+above for the numerical values of the modes:
 
 ```js
 plotUint32( image, pixels, COMPOSITE_NORMAL )
@@ -239,65 +250,6 @@ is `0` and `destY` is `0`
 
 There is also `mapRegionUint32` - it is idential to `mapRegion` except your
 callback should return a Uint32 instead of an `RGBA` array
-
-### compositePixel
-
-Get a new color which is the composite of a pixel over another using one of
-several composite modes:
-
-```js
-export const COMPOSITE_NORMAL = 0
-export const COMPOSITE_MULTIPLY = 1
-export const COMPOSITE_SCREEN = 2
-export const COMPOSITE_OVERLAY = 3
-export const COMPOSITE_DARKEN = 4
-export const COMPOSITE_LIGHTEN = 5
-export const COMPOSITE_HARD_LIGHT = 6
-export const COMPOSITE_DIFFERENCE = 7
-export const COMPOSITE_EXCLUSION = 8
-```
-
-```js
-const { compositePixel, COMPOSITE_NORMAL } = require( '@rgba-image/pixel' )
-
-const sourceR = 51
-const sourceG = 153
-const sourceB = 255
-const sourceA = 128
-
-const destR = 255
-const destG = 153
-const destB = 51
-const destA = 224
-
-const [ newR, newG, newB, newA ] = compositePixel(
-  sourceR, sourceG, sourceB, sourceA,
-  destR, destG, destB, destA,
-  COMPOSITE_NORMAL
-)
-```
-
-Or, as a `Uint32`:
-
-```js
-const { compositePixelUint32, COMPOSITE_NORMAL } = require( '@rgba-image/pixel' )
-
-const sourceR = 51
-const sourceG = 153
-const sourceB = 255
-const sourceA = 128
-
-const destR = 255
-const destG = 153
-const destB = 51
-const destA = 224
-
-const color = compositePixelUint32(
-  sourceR, sourceG, sourceB, sourceA,
-  destR, destG, destB, destA,
-  COMPOSITE_NORMAL
-)
-```
 
 ## License
 

@@ -1,8 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const common_1 = require("@rgba-image/common");
-const util_1 = require("./util");
-const composite_1 = require("./composite");
+const color_1 = require("@rgba-image/color");
 exports.getPixel = (source, x, y) => {
     x = x | 0;
     y = y | 0;
@@ -15,7 +14,7 @@ exports.getPixel = (source, x, y) => {
     const a = source.data[index + 3];
     return [r, g, b, a];
 };
-exports.setPixel = (dest, x, y, r = 0, g = 0, b = 0, a = 255, compositeMode = composite_1.COMPOSITE_NONE) => {
+exports.setPixel = (dest, x, y, r = 0, g = 0, b = 0, a = 255, compositeMode = -1) => {
     x = x | 0;
     y = y | 0;
     const dataIndex = y * dest.width + x;
@@ -23,7 +22,7 @@ exports.setPixel = (dest, x, y, r = 0, g = 0, b = 0, a = 255, compositeMode = co
     if (index < 0 || index >= dest.data.length)
         return;
     const data = new Uint32Array(dest.data.buffer);
-    if (compositeMode === composite_1.COMPOSITE_NONE) {
+    if (compositeMode === -1) {
         data[dataIndex] = common_1.rgbaToUint32(r, g, b, a, common_1.isLittleEndian);
     }
     else {
@@ -31,7 +30,7 @@ exports.setPixel = (dest, x, y, r = 0, g = 0, b = 0, a = 255, compositeMode = co
         const dG = dest.data[index + 1];
         const dB = dest.data[index + 2];
         const dA = dest.data[index + 3];
-        data[dataIndex] = composite_1.compositePixelUint32(r, g, b, a, dR, dG, dB, dA, compositeMode);
+        data[dataIndex] = color_1.compositeRgbaUint32(r, g, b, a, dR, dG, dB, dA, compositeMode);
     }
 };
 exports.getPixelUint32 = (source, x, y) => {
@@ -44,18 +43,18 @@ exports.getPixelUint32 = (source, x, y) => {
     const data = new Uint32Array(source.data.buffer);
     return data[index];
 };
-exports.setPixelUint32 = (dest, x, y, v, compositeMode = composite_1.COMPOSITE_NONE) => {
+exports.setPixelUint32 = (dest, x, y, v, compositeMode = -1) => {
     x = x | 0;
     y = y | 0;
     const size = dest.width * dest.height;
     const index = y * dest.width + x;
     if (index < 0 || index >= size)
         return;
-    v = util_1.clampUint32(v);
+    v = common_1.clampUint32(v);
     const data = new Uint32Array(dest.data.buffer);
     const rgbaUint32 = new Uint32Array(1);
     const rgbaUint8Clamped = new Uint8ClampedArray(rgbaUint32.buffer);
-    if (compositeMode === composite_1.COMPOSITE_NONE) {
+    if (compositeMode === -1) {
         data[index] = v;
     }
     else {
@@ -69,7 +68,7 @@ exports.setPixelUint32 = (dest, x, y, v, compositeMode = composite_1.COMPOSITE_N
         const g = rgbaUint8Clamped[1];
         const b = rgbaUint8Clamped[2];
         const a = rgbaUint8Clamped[3];
-        data[index] = composite_1.compositePixelUint32(r, g, b, a, dR, dG, dB, dA, compositeMode);
+        data[index] = color_1.compositeRgbaUint32(r, g, b, a, dR, dG, dB, dA, compositeMode);
     }
 };
 //# sourceMappingURL=pixel.js.map

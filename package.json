@@ -1,6 +1,6 @@
 {
   "name": "@rgba-image/pixel",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Get or set individual pixels in an ImageData",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -26,7 +26,8 @@
   },
   "homepage": "https://github.com/rgba-image/pixel#readme",
   "dependencies": {
-    "@rgba-image/common": "^0.1.0"
+    "@rgba-image/color": "^0.1.0",
+    "@rgba-image/common": "^0.1.12"
   },
   "devDependencies": {
     "@rgba-image/create-image": "^0.1.1",

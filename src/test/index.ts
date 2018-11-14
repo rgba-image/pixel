@@ -4,11 +4,11 @@ import { fromPng } from '@rgba-image/png'
 import { createImage } from '@rgba-image/create-image'
 import {
   getPixel, setPixel, getPixelUint32, setPixelUint32, PlotData, plot,
-  PlotUint32Data, plotUint32, setRegion, mapRegion, CompositeMode
+  PlotUint32Data, plotUint32, setRegion, mapRegion
 } from '..'
 
 import { mapRegionUint32, setRegionUint32 } from '../region'
-import { rgbaToUint32, isLittleEndian } from '@rgba-image/common'
+import { rgbaToUint32, isLittleEndian, COMPOSITE_NORMAL } from '@rgba-image/common'
 
 const patternPng = fs.readFileSync( './src/test/fixtures/pattern.png' )
 const overlayPng = fs.readFileSync( './src/test/fixtures/overlay.png' )
