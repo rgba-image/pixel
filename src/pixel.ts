@@ -1,4 +1,4 @@
-import { rgbaToUint32, isLittleEndian, CompositeMode, clampUint32, CompositeRgba, CompositeRgbaUint32 } from '@rgba-image/common'
+import { rgbaToUint32, isLittleEndian, clampUint32, CompositeRgbaUint32, CompositeArg } from '@rgba-image/common'
 import { compositeRgbaUint32 } from '@rgba-image/color'
 
 export const getPixel = ( source: ImageData, x: number, y: number ) => {
@@ -17,7 +17,7 @@ export const getPixel = ( source: ImageData, x: number, y: number ) => {
   return [ r, g, b, a ]
 }
 
-export const setPixel = ( dest: ImageData, x: number, y: number, r = 0, g = 0, b = 0, a = 255, composite: CompositeMode | CompositeRgbaUint32 = -1 ) => {
+export const setPixel = ( dest: ImageData, x: number, y: number, r = 0, g = 0, b = 0, a = 255, composite: CompositeArg = -1 ) => {
   x = x | 0
   y = y | 0
 
@@ -56,7 +56,7 @@ export const getPixelUint32 = ( source: ImageData, x: number, y: number ) => {
   return data[ index ]
 }
 
-export const setPixelUint32 = ( dest: ImageData, x: number, y: number, v: number, composite: CompositeMode | CompositeRgbaUint32 = -1 ) => {
+export const setPixelUint32 = ( dest: ImageData, x: number, y: number, v: number, composite: CompositeArg = -1 ) => {
   x = x | 0
   y = y | 0
 
